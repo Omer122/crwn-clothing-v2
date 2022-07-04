@@ -4,7 +4,9 @@ import { getAuth,
     signInWithPopup, 
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
     } from 'firebase/auth';
 
 import { 
@@ -22,7 +24,6 @@ const firebaseConfig = {
     messagingSenderId: "317930400616",
     appId: "1:317930400616:web:8856e083b185c7680d04dd"
   };
-
   
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
@@ -53,7 +54,7 @@ export const createUserDocumentFromAuth = async (
     // get data related to the doc
     const userSnapshot = await getDoc(userDocRef);
 
-    // if user data does not exist in firestore:
+    // if user data does NOT exist in firestore:
     // create/set the document with the data from userAuth in my collection
     if (!userSnapshot.exists()){
         const { displayName, email } = userAuth;
@@ -70,7 +71,7 @@ export const createUserDocumentFromAuth = async (
             console.log('error creating the user', error.message);
         }
     }
-    return userDocRef;
+    return userDocRef; //getting a valid userDocRef (new or existing) either way
 };
 
 //authenticatd user, setting values async in firebase
@@ -87,3 +88,11 @@ export const signInAuthWithEmailAndPassword = async (email, password ) =>{
     return await signInWithEmailAndPassword(auth, email, password);
 }
 
+//auth keeps track of the signed in users also
+export const signOutUser = async()=> await signOut(auth);
+
+// listens to auth changing -> running a callback
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback)
+
+
+//onAuthStateChanged : user signs in = auth change, user signs out = auth change, callback invoke

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { 
     signInWithGooglePopup,
     signInAuthWithEmailAndPassword
@@ -19,8 +20,6 @@ const defaultFormFields = {  //initial values
 const SignInForm = () => {
     const [ formFields, setFormFields ] = useState(defaultFormFields);
     const { email, password } = formFields; //de-construct the 2 values I want
-
-    console.log(formFields);
     
     //clear the fields after sign up
     const resetFormFields = () =>{
@@ -31,9 +30,9 @@ const SignInForm = () => {
         event.preventDefault(); //I will handle everything
         
         try{
-            const response = await signInAuthWithEmailAndPassword(email, password);
+            const {user} = await signInAuthWithEmailAndPassword(email, password);
             //get the user's access token\uid from firebase==authentication
-            console.log(response);
+                        
             resetFormFields();
         } catch(error){
             console.log(error);
@@ -59,8 +58,8 @@ const SignInForm = () => {
     };
 
     const signInWithGoogle = async ()=> {
-        const { user } = await signInWithGooglePopup();
-        await createUserDocumentFromAuth(user);
+        await signInWithGooglePopup();
+         
     };
 
 

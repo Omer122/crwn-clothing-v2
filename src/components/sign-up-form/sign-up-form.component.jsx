@@ -17,8 +17,6 @@ const defaultFormFields = {  //initial values
 const SignUpForm = () => {
     const [ formFields, setFormFields ] = useState(defaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields; //de-construct the 4 values I want
-
-    console.log(formFields);
     
     //clear the fields after sign up
     const resetFormFields = () =>{
@@ -33,6 +31,7 @@ const SignUpForm = () => {
         }
         try{
             const {user} = await createAuthUserWithEmailAndPassword(email, password);
+                        
             //creating the new user doc on firebase
             await createUserDocumentFromAuth(user, {displayName} );
             resetFormFields(); //reseting the fields
